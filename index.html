@@ -367,6 +367,8 @@
             "Sangonomiya Kokomi"
          ];
 
+         var shuffledTeam = [];
+
          var filterTeam = [...myTeam];
 
          var lockedTeam = [];
@@ -708,7 +710,9 @@
          }
 
          function tapChar(char) {
+            var charName = char.lastElementChild.innerText;
             switch (selectionMode) {
+
                case 'owned':
                   var own_element;
                   var temp;
@@ -717,15 +721,15 @@
                      // char.classList.remove('unowned');
 
                      own_element = 'owned_chars';
-                     changeTeam('add', char.innerText);
+                     changeTeam('add', charName);
                   } else {
                      char.classList.add('inactive');
                      // char.classList.add('unowned');
 
                      own_element = 'unowned_chars'
-                     changeTeam('remove', char.innerText);
+                     changeTeam('remove', charName);
 
-                     var index = lockedTeam.indexOf(char.innerText);
+                     var index = lockedTeam.indexOf(charName);
 
                      if (index > -1) {
                         lockedTeam.splice(index, 1);
@@ -761,10 +765,10 @@
                case 'filter':
                   if (char.classList.contains('inactive') && !char.classList.contains('unowned')) {
                      char.classList.remove('inactive');
-                     changeTeam('add', char.innerText);
+                     changeTeam('add', charName);
                   } else {
                      char.classList.add('inactive');
-                     changeTeam('remove', char.innerText);
+                     changeTeam('remove', charName);
                   }
 
                   break;
@@ -772,11 +776,11 @@
                case 'slot2':
                case 'slot3':
                case 'slot4':
-                  var char = char.innerText;
+                  var char = charName;
                   var index = parseInt(selectionMode.slice(-1)) - 1;
                   var slot = document.getElementsByClassName('teamSlot')[index];
 
-                  if (!lockedTeam.includes(char)) {
+                  if (!shuffledTeam.includes(char)) {
 
                      if (slot.classList.contains('locked')) {
                         lockSlot(slot, index);
@@ -786,8 +790,19 @@
                      slot.lastElementChild.innerText = char;
                      lockSlot(slot, index);
                   } else {
-                     var oldIndex = lockedTeam.indexOf(char);
-                     [lockedTeam[index], lockedTeam[oldIndex]] = [lockedTeam[oldIndex], lockedTeam[index]];
+                     var oldIndex = shuffledTeam.indexOf(char);
+
+                     if (lockedTeam.includes(char)) {
+                        [lockedTeam[index], lockedTeam[oldIndex]] = [lockedTeam[oldIndex], lockedTeam[index]];
+                     } else {
+                        lockedTeam[index] = char; 
+                     }
+
+                     [shuffledTeam[index], shuffledTeam[oldIndex]] = [shuffledTeam[oldIndex], shuffledTeam[index]];
+
+
+
+
 
                      var oldSlot = document.getElementsByClassName('teamSlot')[oldIndex];
 
@@ -802,6 +817,7 @@
                      }
 
                      slot.classList.add('locked');
+
 
 
 
@@ -837,7 +853,7 @@
             shuffle(filterTeam);
             shuffle(filterTeam);
 
-            var shuffledTeam = [...filterTeam];
+            shuffledTeam = [...filterTeam];
             var teamSlot = [...document.getElementsByClassName('teamSlot')];
 
             teamSlot = teamSlot.filter(x => !x.classList.contains('locked'))
@@ -865,6 +881,10 @@
                }
             });
 
+            for (var i = 0; i < 4; i++) {
+               shuffledTeam[i] = document.getElementsByClassName('teamSlot')[i].lastElementChild.innerText;
+            }
+
 
             document.getElementById('myTeamTxt').innerText = myTeam;
             document.getElementById('filterTeamTxt').innerText = filterTeam;
@@ -872,19 +892,6 @@
             document.getElementById('lockedTeamTxt').innerText = lockedTeam;
             document.getElementById('lclStrgTxt').innerText = localStorage.myTeamGITeamRandom;
 
-
-            // for (var i = 0; i < teamSlot.length; i++) {
-            //    var slot = teamSlot[i];
-            //    var char = shuffledTeam[i];
-            //    if (char) {
-            //       slot.firstElementChild.setAttribute('style', 'background-image: url(img/' + genshinCharacters[char].charURL + '.png); background-size: 100px;');
-            //       slot.lastElementChild.innerText = (char);
-            //
-            //    } else {
-            //       slot.firstElementChild.removeAttribute('style');
-            //       slot.lastElementChild.innerText = ('');
-            //    }
-            // }
          }
 
          function clearTeam() {
@@ -900,7 +907,7 @@
          }
 
          function lockSlot(slot, index) {
-            var char = slot.innerText;
+            var char = slot.lastElementChild.innerText;
             if (slot.classList.contains('locked')) {
                slot.classList.remove('locked');
 
@@ -930,7 +937,7 @@
                var unowned = [];
 
                sortList.forEach(x => {
-                  if (myTeam.indexOf(x.innerText) < 0) {
+                  if (myTeam.indexOf(x.lastElementChild.innerText) < 0) {
                      unowned_chars.appendChild(x);
                      x.classList.add('inactive');
                      x.classList.add('unowned');
