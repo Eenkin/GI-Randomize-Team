@@ -292,8 +292,6 @@
          <h1>Characters I Don't Have:</h1>
          <div id="unowned_chars"></div>
       </div>
-      
-      <div id="debugCheck" style="color:white;"></div>
 
 
 
@@ -733,7 +731,7 @@
                   own_element.innerHTML = '';
                   temp.forEach(x => own_element.appendChild(x));
 
-                  localStorage.myTeamGITeamRandom = JSON.stringify(myTeam);
+                  localStorage.myTeamGITeamRandom = JSON.stringify([...new Set(myTeam)]);
                   break;
                case 'filter':
                   if (char.classList.contains('inactive') && !char.classList.contains('unowned')) {
@@ -841,8 +839,7 @@
                   slot.lastElementChild.innerText = ('');
                }
             });
-         
-         document.getElementById('debugCheck').innerHTML = '<p>My Team:<br>' + myTeam + '</p><p>Filtered Team:<br>' + filterTeam + '</p><p>Shuffled Team:<br>' + shuffledTeam + '</p><p>Locked Team:<br>' + lockedTeam + '</p>';
+
 
             // for (var i = 0; i < teamSlot.length; i++) {
             //    var slot = teamSlot[i];
@@ -890,7 +887,7 @@
 
          function loadTeam() {
             if (localStorage.myTeamGITeamRandom) {
-               myTeam = JSON.parse(localStorage.myTeamGITeamRandom);
+               myTeam = [... new Set(JSON.parse(localStorage.myTeamGITeamRandom))];
                filterTeam = [...myTeam];
 
                var owned_chars = document.getElementById('owned_chars');
