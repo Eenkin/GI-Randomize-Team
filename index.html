@@ -292,6 +292,8 @@
          <h1>Characters I Don't Have:</h1>
          <div id="unowned_chars"></div>
       </div>
+      
+      <div id="debugCheck" style="color:white;"></div.
 
 
 
@@ -839,7 +841,8 @@
                   slot.lastElementChild.innerText = ('');
                }
             });
-
+         
+         document.getElementById('debugCheck').innerHTML = '<p>My Team:<br>' + myTeam + '</p><p>Filtered Team:<br>' + filterTeam + '</p><p>Shuffled Team:<br>' + shuffledTeam + '</p><p>Locked Team:<br>' + lockedTeam + '</p>';
 
             // for (var i = 0; i < teamSlot.length; i++) {
             //    var slot = teamSlot[i];
