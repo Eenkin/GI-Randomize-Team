@@ -1,813 +1,916 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<<!DOCTYPE html>
+   <html lang="en" dir="ltr">
 
-<head>
-   <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>GI Team Randomize</title>
-   <style>
-      body{ max-width: 1000px;
-         margin: 0 auto;
-         background-color: #313038;
-         user-select: none;
-
-      }
-      .charSelect, .charWinner{
-         display: inline-grid;
-         width: 100px;
-         margin: 5px;
-         cursor: pointer;
-      }
-
-      .charWinner{
-         border: 5px solid gold;
-         border-radius: 0 0 16px 16px;
-      }
-
-      .charSelect:hover > img{
-         background-color: #dadada;
-      }
-
-      .charSelect > *, .charWinner > * {
-         max-width: 100%;
-      }
-
-      .charSelect > img {
-         background-color: dimgray;
-      }
-
-      .charWinner > img {
-         background-color: #f9f2ed;
-         height: 100px;
-      }
-
-      .locked{
-         border-color: gray!important;
-      }
-
-      .locked > img{
-         background-color: lightgray!important;
-      }
-
-      .locked > .charNames::before{
-         content: '🔒';
-         filter:grayscale(1);
-         font-size: 0.75rem;
-      }
-
-      .inactive {
-         filter: grayscale(1) brightness(0.4);
-      }
-
-      .hide{
-         display: none;
-      }
-
-      img{
-         pointer-events: none;
-      }
-
-      .charNames {
-         background-color: #d2ac7e;
-         text-align: center;
-         padding: 3px;
-         height: 45px;
-         box-sizing: border-box;
-         border-radius: 0 0 10px 10px;
-      }
-
-      #not_ownedSect{
-         margin: 40px 0;
-      }
-   </style>
-</head>
-
-<body>
-
-   <div id="results">
-      <div class="charWinner" id="slot0" onclick="lockSlot(this, 0)" ondrop="winnerDrop(event, this, 0)" ondragover="allowDrop(event)">
-         <img src=""></img>
-         <div class="charNames">Slot #1</div>
-      </div>
-      <div class="charWinner" id="slot1" onclick="lockSlot(this, 1)" ondrop="winnerDrop(event, this, 1)" ondragover="allowDrop(event)">
-         <img src=""></img>
-         <div class="charNames">Slot #2</div>
-      </div>
-      <div class="charWinner" id="slot2" onclick="lockSlot(this, 2)" ondrop="winnerDrop(event, this, 2)" ondragover="allowDrop(event)">
-         <img src=""></img>
-         <div class="charNames">Slot #3</div>
-      </div>
-      <div class="charWinner" id="slot3" onclick="lockSlot(this, 3)" ondrop="winnerDrop(event, this, 3)" ondragover="allowDrop(event)">
-         <img src=""></img>
-         <div class="charNames">Slot #4</div>
-      </div>
-   </div>
-
-   <br>
-   <input type="button" onclick="randomTeams();" value="Randomize Team">
-   <input type="button" onclick="clearTeams();" value="Clear Team">
-   <br><br><br>
-
-   <div id="chooseChar" ondrop="drop(event, this)" ondragover="allowDrop(event)">
-      <div class="charSelect" onclick="tapCharacter(this)" id="Albedo"><img src="img/Albedo.png">
-         <div class="charNames">Albedo</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Aloy"><img src="img/Aloy.png">
-         <div class="charNames">Aloy</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Amber"><img src="img/Amber.png">
-         <div class="charNames">Amber</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Barbara"><img src="img/Barbara.png">
-         <div class="charNames">Barbara</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Beidou"><img src="img/Beidou.png">
-         <div class="charNames">Beidou</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Bennett"><img src="img/Bennett.png">
-         <div class="charNames">Bennett</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Chongyun"><img src="img/Chongyun.png">
-         <div class="charNames">Chongyun</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Diluc"><img src="img/Diluc.png">
-         <div class="charNames">Diluc</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Diona"><img src="img/Diona.png">
-         <div class="charNames">Diona</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Eula"><img src="img/Eula.png">
-         <div class="charNames">Eula</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Fischl"><img src="img/Fischl.png">
-         <div class="charNames">Fischl</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Ganyu"><img src="img/Ganyu.png">
-         <div class="charNames">Ganyu</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Hu_Tao"><img src="img/Hu_Tao.png">
-         <div class="charNames">Hu Tao</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Jean"><img src="img/Jean.png">
-         <div class="charNames">Jean</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Kaedehara_Kazuha"><img src="img/Kaedehara_Kazuha.png">
-         <div class="charNames">Kaedehara Kazuha</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Kaeya"><img src="img/Kaeya.png">
-         <div class="charNames">Kaeya</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Kamisato_Ayaka"><img src="img/Kamisato_Ayaka.png">
-         <div class="charNames">Kamisato Ayaka</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Keqing"><img src="img/Keqing.png">
-         <div class="charNames">Keqing</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Klee"><img src="img/Klee.png">
-         <div class="charNames">Klee</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Kujou_Sara"><img src="img/Kujou_Sara.png">
-         <div class="charNames">Kujou Sara</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Lisa"><img src="img/Lisa.png">
-         <div class="charNames">Lisa</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Mona"><img src="img/Mona.png">
-         <div class="charNames">Mona</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Ningguang"><img src="img/Ningguang.png">
-         <div class="charNames">Ningguang</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Noelle"><img src="img/Noelle.png">
-         <div class="charNames">Noelle</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Qiqi"><img src="img/Qiqi.png">
-         <div class="charNames">Qiqi</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Raiden_Shogun"><img src="img/Raiden_Shogun.png">
-         <div class="charNames">Raiden Shogun</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Razor"><img src="img/Razor.png">
-         <div class="charNames">Razor</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Rosaria"><img src="img/Rosaria.png">
-         <div class="charNames">Rosaria</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Sangonomiya_Kokomi"><img src="img/Sangonomiya_Kokomi.png">
-         <div class="charNames">Sangonomiya Kokomi</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Sayu"><img src="img/Sayu.png">
-         <div class="charNames">Sayu</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Sucrose"><img src="img/Sucrose.png">
-         <div class="charNames">Sucrose</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Tartaglia"><img src="img/Tartaglia.png">
-         <div class="charNames">Tartaglia</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Traveler"><img src="img/Traveler.png">
-         <div class="charNames">Traveler</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Venti"><img src="img/Venti.png">
-         <div class="charNames">Venti</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Xiangling"><img src="img/Xiangling.png">
-         <div class="charNames">Xiangling</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Xiao"><img src="img/Xiao.png">
-         <div class="charNames">Xiao</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Xingqiu"><img src="img/Xingqiu.png">
-         <div class="charNames">Xingqiu</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Xinyan"><img src="img/Xinyan.png">
-         <div class="charNames">Xinyan</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Yanfei"><img src="img/Yanfei.png">
-         <div class="charNames">Yanfei</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Yoimiya"><img src="img/Yoimiya.png">
-         <div class="charNames">Yoimiya</div>
-      </div>
-      <div class="charSelect" onclick="tapCharacter(this)" id="Zhongli"><img src="img/Zhongli.png">
-         <div class="charNames">Zhongli</div>
-      </div>
-   </div>
-
-   <div id="not_ownedSect" ondrop="drop(event, this)" ondragover="allowDrop(event)"></div>
-   <div><button onclick="saveTeam()">Save Team</button></div>
-
-   <script>
-      // var myTeams = ["Venti", "Fischl", "Bennett", "Sucrose", "Razor", "Xingqiu", "Chongyun", "Qiqi", "Kaedehara Kazuha", "Beidou", "Ningguang", "Yanfei", "Mona", "Rosaria", "Traveler", "Diona", "Albedo", "Xiangling", "Barbara", "Xiao", "Kaeya", "Amber", "Diluc", "Lisa", "Noelle", "Zhongli", "Raiden Shogun", "Jean", "Xinyan", "Aloy"];
-      var myTeams = [];
-      var resultsTeam = [];
-
-      var myChar = [];
-      var lockedSlots = [null, null, null, null];
-
-      var charFileA = [];
-      var charFileB = [];
-      var charFileC = [];
-
-      var genshinCharacters = {
-         'Traveler': {
-            'element': 'Any',
-            'region': 'Outlander',
-            'rarity': 5,
-            'weapon': 'Sword',
-         },
-         'Jean': {
-            'element': 'Anemo',
-            'region': 'Mondstat',
-            'rarity': 5,
-            'weapon': 'Sword',
-         },
-         'Amber': {
-            'element': 'Pyro',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Bow',
-         },
-         'Lisa': {
-            'element': 'Electro',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Catalyst',
-         },
-         'Kaeya': {
-            'element': 'Cryo',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Sword',
-         },
-         'Barbara': {
-            'element': 'Hydro',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Catalyst',
-         },
-         'Diluc': {
-            'element': 'Pyro',
-            'region': 'Mondstat',
-            'rarity': 5,
-            'weapon': 'Claymore',
-         },
-         'Razor': {
-            'element': 'Electro',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Claymore',
-         },
-         'Venti': {
-            'element': 'Anemo',
-            'region': 'Mondstat',
-            'rarity': 5,
-            'weapon': 'Bow',
-         },
-         'Klee': {
-            'element': 'Pyro',
-            'region': 'Mondstat',
-            'rarity': 5,
-            'weapon': 'Catalyst',
-         },
-         'Bennett': {
-            'element': 'Pyro',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Sword',
-         },
-         'Noelle': {
-            'element': 'Geo',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Claymore',
-         },
-         'Fischl': {
-            'element': 'Electro',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Bow',
-         },
-         'Sucrose': {
-            'element': 'Anemo',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Catalyst',
-         },
-         'Mona': {
-            'element': 'Hydro',
-            'rarity': 5,
-            'region': 'Mondstat',
-            'weapon': 'Catalyst',
-         },
-         'Diona': {
-            'element': 'Cryo',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Bow',
-         },
-         'Albedo': {
-            'element': 'Geo',
-            'rarity': 5,
-            'region': 'Mondstat',
-            'weapon': 'Sword',
-         },
-         'Rosaria': {
-            'element': 'Cryo',
-            'rarity': 4,
-            'region': 'Mondstat',
-            'weapon': 'Polearm',
-         },
-         'Eula': {
-            'element': 'Cryo',
-            'rarity': 5,
-            'region': 'Mondstat',
-            'weapon': 'Claymore',
-         },
-         'Aloy': {
-            'element': 'Cryo',
-            'rarity': 'Event',
-            'region': 'Outlander',
-            'weapon': 'Bow',
-         },
-         'Xiao': {
-            'element': 'Anemo',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Polearm',
-         },
-         'Beidou': {
-            'element': 'Electro',
-            'rarity': 4,
-            'region': 'Liyue',
-            'weapon': 'Claymore',
-         },
-         'Ningguang': {
-            'element': 'Geo',
-            'rarity': 4,
-            'region': 'Liyue',
-            'weapon': 'Catalyst',
-         },
-         'Xiangling': {
-            'element': 'Pyro',
-            'rarity': 4,
-            'region': 'Liyue',
-            'weapon': 'Polearm',
-         },
-         'Xingqiu': {
-            'element': 'Hydro',
-            'rarity': 4,
-            'region': 'Liyue',
-            'weapon': 'Sword',
-         },
-         'Chongyun': {
-            'element': 'Cryo',
-            'rarity': 4,
-            'region': 'Liyue',
-            'weapon': 'Claymore',
-         },
-         'Qiqi': {
-            'element': 'Cryo',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Sword',
-         },
-         'Keqing': {
-            'element': 'Electro',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Sword',
-         },
-         'Tartaglia': {
-            'element': 'Hydro',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Bow',
-         },
-         'Zhongli': {
-            'element': 'Geo',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Polearm',
-         },
-         'Xinyan': {
-            'element': 'Pyro',
-            'rarity': 4,
-            'region': 'Liyue',
-            'weapon': 'Claymore',
-         },
-         'Ganyu': {
-            'element': 'Cryo',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Bow',
-         },
-         'Hu Tao': {
-            'element': 'Pyro',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Polearm',
-         },
-         'Yanfei': {
-            'element': 'Pyro',
-            'rarity': 5,
-            'region': 'Liyue',
-            'weapon': 'Catalyst',
-         },
-         'Kamisato Ayaka': {
-            'element': 'Cryo',
-            'rarity': 5,
-            'region': 'Inazuma',
-            'weapon': 'Sword',
-         },
-         'Kaedehara Kazuha': {
-            'element': 'Anemo',
-            'rarity': 5,
-            'region': 'Inazuma',
-            'weapon': 'Sword',
-         },
-         'Yoimiya': {
-            'element': 'Pyro',
-            'rarity': 5,
-            'region': 'Inazuma',
-            'weapon': 'Bow',
-         },
-         'Sayu': {
-            'element': 'Anemo',
-            'rarity': 4,
-            'region': 'Inazuma',
-            'weapon': 'Claymore',
-         },
-         'Raiden Shogun': {
-            'element': 'Electro',
-            'rarity': 5,
-            'region': 'Inazuma',
-            'weapon': 'Polearm',
-         },
-         'Kujou Sara': {
-            'element': 'Electro',
-            'rarity': 4,
-            'region': 'Inazuma',
-            'weapon': 'Bow',
-         },
-         'Sangonomiya Kokomi': {
-            'element': 'Hydro',
-            'rarity': 5,
-            'region': 'Inazuma',
-            'weapon': 'Catalyst',
-         }
-      }
-
-      function shuffle(array) {
-         let currentIndex = array.length,
-            randomIndex;
-
-         // While there remain elements to shuffle...
-         while (currentIndex != 0) {
-
-            // Pick a remaining element...
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-
-            // And swap it with the current element.
-            [array[currentIndex], array[randomIndex]] = [
-               array[randomIndex], array[currentIndex]
-            ];
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>GI Randomize Teams</title>
+      <style>
+         body {
+            max-width: 1000px;
+            margin: 10px auto;
+            background-color: #313038;
+            user-select: none
          }
 
-         return array;
-      }
+         #resultsSection {
+            margin: 0 10px;
+            /* width: max-content; */
+            min-width: 495px;
+            max-width: 1000px;
+         }
 
-      function randomTeams() {
-         shuffle(myTeams);
-         shuffle(myTeams);
-         shuffle(myTeams);
-         shuffle(myTeams);
-         shuffle(myTeams);
+         .teamSlot,
+         .charSelect {
+            display: inline-grid;
+            width: 100px;
+            margin: 5px;
+            cursor: pointer;
+         }
+
+         .charSelect img,
+         .winnerImg img {
+            width: 100px;
+         }
+
+         .teamSlot {
+            border: 5px solid gold;
+            border-radius: 0 0 16px 16px;
+         }
+
+         .winnerImg {
+            background-color: #f9f2ed;
+            height: 100px;
+         }
+
+         .winnerImg:hover {
+            background-color: white;
+         }
+
+         .char_name {
+            background-color: #d2ac7e;
+            text-align: center;
+            padding: 3px;
+            height: 45px;
+            box-sizing: border-box;
+            border-radius: 0 0 10px 10px;
+         }
+
+         #team_buttons {
+            margin: 10px 0;
+         }
+
+         #team_buttons>span button {
+            color: #4e97e2;
+         }
+
+         #team_buttons button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #d2ac7e;
+            font-weight: 1000;
+            font-size: 1.5em;
+            padding: 0;
+            margin-right: 20px;
+            display: inline-grid;
+         }
+
+         #team_buttons button:hover {
+            color: white;
+         }
+
+         .currentMode {
+            color: white !important;
+         }
+
+         .charSelect>img {
+            background-color: dimgray;
+         }
+
+         .charSelect:hover>img {
+            background-color: #dadada;
+         }
+
+         img {
+            pointer-events: none;
+         }
+
+         .charSelect>* {
+            max-width: 100%;
+         }
+
+         .mainSect {
+            margin: 0 10px;
+            min-width: 455px;
+         }
+
+         h1 {
+            color: white;
+         }
+
+         .inactive {
+            opacity: 33%;
+         }
+
+         .locked {
+            border-color: lightgray !important;
+            opacity: 33%;
+         }
+      </style>
+   </head>
+
+   <body>
+      <div id='resultsSection'>
+         <div class="teamSlot" onclick="lockSlot(this, 0)">
+            <div class="winnerImg"><img></div>
+            <div class="char_name"></div>
+         </div>
+         <div class="teamSlot" onclick="lockSlot(this, 1)">
+            <div class="winnerImg"><img></div>
+            <div class="char_name"></div>
+         </div>
+         <div class="teamSlot" onclick="lockSlot(this, 2)">
+            <div class="winnerImg"><img></div>
+            <div class="char_name"></div>
+         </div>
+         <div class="teamSlot" onclick="lockSlot(this, 3)">
+            <div class="winnerImg"><img></div>
+            <div class="char_name"></div>
+         </div>
+
+         <div id="team_buttons">
+            <button onclick="randomizeTeam()">Randomize Team</button>
+            <button onclick="clearTeam()">Clear Team</button>
+
+            <h2 style="color: white;">Selection Mode</h2>
+            <span>
+               <button id="filterBTN" onclick="modeSwitch('filter')" class="currentMode">Filter</button>
+               <button id="ownedBTN" onclick="modeSwitch('owned')">Owned</button>
+
+               <br>
+               <button id="slot1BTN" onclick="modeSwitch('slot1')">Add to Slot 1</button>
+               <button id="slot2BTN" onclick="modeSwitch('slot2')">Add to Slot 2</button>
+               <button id="slot3BTN" onclick="modeSwitch('slot3')">Add to Slot 3</button>
+               <button id="slot4BTN" onclick="modeSwitch('slot4')">Add to Slot 4</button>
+            </span>
+         </div>
+      </div>
+
+      <br>
+
+      <div class="mainSect">
+         <h1>My Characters:</h1>
+         <div id="owned_chars">
+            <div class="charSelect" onclick="tapChar(this)" id="Albedo"><img src="img/Albedo.png">
+               <div class="char_name">Albedo</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Aloy"><img src="img/Aloy.png">
+               <div class="char_name">Aloy</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Amber"><img src="img/Amber.png">
+               <div class="char_name">Amber</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Barbara"><img src="img/Barbara.png">
+               <div class="char_name">Barbara</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Beidou"><img src="img/Beidou.png">
+               <div class="char_name">Beidou</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Bennett"><img src="img/Bennett.png">
+               <div class="char_name">Bennett</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Chongyun"><img src="img/Chongyun.png">
+               <div class="char_name">Chongyun</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Diluc"><img src="img/Diluc.png">
+               <div class="char_name">Diluc</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Diona"><img src="img/Diona.png">
+               <div class="char_name">Diona</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Eula"><img src="img/Eula.png">
+               <div class="char_name">Eula</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Fischl"><img src="img/Fischl.png">
+               <div class="char_name">Fischl</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Ganyu"><img src="img/Ganyu.png">
+               <div class="char_name">Ganyu</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Hu_Tao"><img src="img/Hu_Tao.png">
+               <div class="char_name">Hu Tao</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Jean"><img src="img/Jean.png">
+               <div class="char_name">Jean</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Kaedehara_Kazuha"><img src="img/Kaedehara_Kazuha.png">
+               <div class="char_name">Kaedehara Kazuha</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Kaeya"><img src="img/Kaeya.png">
+               <div class="char_name">Kaeya</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Kamisato_Ayaka"><img src="img/Kamisato_Ayaka.png">
+               <div class="char_name">Kamisato Ayaka</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Keqing"><img src="img/Keqing.png">
+               <div class="char_name">Keqing</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Klee"><img src="img/Klee.png">
+               <div class="char_name">Klee</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Kujou_Sara"><img src="img/Kujou_Sara.png">
+               <div class="char_name">Kujou Sara</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Lisa"><img src="img/Lisa.png">
+               <div class="char_name">Lisa</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Mona"><img src="img/Mona.png">
+               <div class="char_name">Mona</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Ningguang"><img src="img/Ningguang.png">
+               <div class="char_name">Ningguang</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Noelle"><img src="img/Noelle.png">
+               <div class="char_name">Noelle</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Qiqi"><img src="img/Qiqi.png">
+               <div class="char_name">Qiqi</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Raiden_Shogun"><img src="img/Raiden_Shogun.png">
+               <div class="char_name">Raiden Shogun</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Razor"><img src="img/Razor.png">
+               <div class="char_name">Razor</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Rosaria"><img src="img/Rosaria.png">
+               <div class="char_name">Rosaria</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Sangonomiya_Kokomi"><img src="img/Sangonomiya_Kokomi.png">
+               <div class="char_name">Sangonomiya Kokomi</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Sayu"><img src="img/Sayu.png">
+               <div class="char_name">Sayu</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Sucrose"><img src="img/Sucrose.png">
+               <div class="char_name">Sucrose</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Tartaglia"><img src="img/Tartaglia.png">
+               <div class="char_name">Tartaglia</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Traveler"><img src="img/Traveler.png">
+               <div class="char_name">Traveler</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Venti"><img src="img/Venti.png">
+               <div class="char_name">Venti</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Xiangling"><img src="img/Xiangling.png">
+               <div class="char_name">Xiangling</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Xiao"><img src="img/Xiao.png">
+               <div class="char_name">Xiao</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Xingqiu"><img src="img/Xingqiu.png">
+               <div class="char_name">Xingqiu</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Xinyan"><img src="img/Xinyan.png">
+               <div class="char_name">Xinyan</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Yanfei"><img src="img/Yanfei.png">
+               <div class="char_name">Yanfei</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Yoimiya"><img src="img/Yoimiya.png">
+               <div class="char_name">Yoimiya</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Zhongli"><img src="img/Zhongli.png">
+               <div class="char_name">Zhongli</div>
+            </div>
+         </div>
+      </div>
+
+      <div class="mainSect">
+         <h1>Characters I Don't Have:</h1>
+         <div id="unowned_chars"></div>
+      </div>
 
 
 
-         resultsTeam = [...myTeams].filter(a => !lockedSlots.includes(a)).slice(0, 4);
 
-         console.log(resultsTeam);
+      <script>
+         var selectionMode = 'filter';
+         var myTeam = [
+            "Traveler",
+            "Jean",
+            "Amber",
+            "Lisa",
+            "Kaeya",
+            "Barbara",
+            "Diluc",
+            "Razor",
+            "Venti",
+            "Klee",
+            "Bennett",
+            "Noelle",
+            "Fischl",
+            "Sucrose",
+            "Mona",
+            "Diona",
+            "Albedo",
+            "Rosaria",
+            "Eula",
+            "Aloy",
+            "Xiao",
+            "Beidou",
+            "Ningguang",
+            "Xiangling",
+            "Xingqiu",
+            "Chongyun",
+            "Qiqi",
+            "Keqing",
+            "Tartaglia",
+            "Zhongli",
+            "Xinyan",
+            "Ganyu",
+            "Hu Tao",
+            "Yanfei",
+            "Kamisato Ayaka",
+            "Kaedehara Kazuha",
+            "Yoimiya",
+            "Sayu",
+            "Raiden Shogun",
+            "Kujou Sara",
+            "Sangonomiya Kokomi"
+         ];
 
-         var results = document.getElementById('results');
-         var resultsIndex = 0;
-         // results.innerHTML = "";
+         var filterTeam = [...myTeam];
 
-         var charWinnerSlots = [...document.getElementsByClassName('charWinner')];
+         var lockedTeam = [];
 
-         charWinnerSlots = charWinnerSlots.filter(slot => !slot.classList.contains('locked'))
-         // console.log(charWinnerSlots);
-
-         lockedSlots.forEach((item, i) => {
-            var index = resultsTeam.indexOf(item);
-            if (index > -1) {
-               resultsTeam.splice(index, 1);
+         var genshinCharacters = {
+            "Traveler": {
+               "element": "Any",
+               "region": "Outlander",
+               "rarity": 5,
+               "weapon": "Sword",
+               "charURL": "Traveler"
+            },
+            "Jean": {
+               "element": "Anemo",
+               "region": "Mondstat",
+               "rarity": 5,
+               "weapon": "Sword",
+               "charURL": "Jean"
+            },
+            "Amber": {
+               "element": "Pyro",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Bow",
+               "charURL": "Amber"
+            },
+            "Lisa": {
+               "element": "Electro",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Catalyst",
+               "charURL": "Lisa"
+            },
+            "Kaeya": {
+               "element": "Cryo",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Sword",
+               "charURL": "Kaeya"
+            },
+            "Barbara": {
+               "element": "Hydro",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Catalyst",
+               "charURL": "Barbara"
+            },
+            "Diluc": {
+               "element": "Pyro",
+               "region": "Mondstat",
+               "rarity": 5,
+               "weapon": "Claymore",
+               "charURL": "Diluc"
+            },
+            "Razor": {
+               "element": "Electro",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Claymore",
+               "charURL": "Razor"
+            },
+            "Venti": {
+               "element": "Anemo",
+               "region": "Mondstat",
+               "rarity": 5,
+               "weapon": "Bow",
+               "charURL": "Venti"
+            },
+            "Klee": {
+               "element": "Pyro",
+               "region": "Mondstat",
+               "rarity": 5,
+               "weapon": "Catalyst",
+               "charURL": "Klee"
+            },
+            "Bennett": {
+               "element": "Pyro",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Sword",
+               "charURL": "Bennett"
+            },
+            "Noelle": {
+               "element": "Geo",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Claymore",
+               "charURL": "Noelle"
+            },
+            "Fischl": {
+               "element": "Electro",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Bow",
+               "charURL": "Fischl"
+            },
+            "Sucrose": {
+               "element": "Anemo",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Catalyst",
+               "charURL": "Sucrose"
+            },
+            "Mona": {
+               "element": "Hydro",
+               "rarity": 5,
+               "region": "Mondstat",
+               "weapon": "Catalyst",
+               "charURL": "Mona"
+            },
+            "Diona": {
+               "element": "Cryo",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Bow",
+               "charURL": "Diona"
+            },
+            "Albedo": {
+               "element": "Geo",
+               "rarity": 5,
+               "region": "Mondstat",
+               "weapon": "Sword",
+               "charURL": "Albedo"
+            },
+            "Rosaria": {
+               "element": "Cryo",
+               "rarity": 4,
+               "region": "Mondstat",
+               "weapon": "Polearm",
+               "charURL": "Rosaria"
+            },
+            "Eula": {
+               "element": "Cryo",
+               "rarity": 5,
+               "region": "Mondstat",
+               "weapon": "Claymore",
+               "charURL": "Eula"
+            },
+            "Aloy": {
+               "element": "Cryo",
+               "rarity": "Event",
+               "region": "Outlander",
+               "weapon": "Bow",
+               "charURL": "Aloy"
+            },
+            "Xiao": {
+               "element": "Anemo",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Polearm",
+               "charURL": "Xiao"
+            },
+            "Beidou": {
+               "element": "Electro",
+               "rarity": 4,
+               "region": "Liyue",
+               "weapon": "Claymore",
+               "charURL": "Beidou"
+            },
+            "Ningguang": {
+               "element": "Geo",
+               "rarity": 4,
+               "region": "Liyue",
+               "weapon": "Catalyst",
+               "charURL": "Ningguang"
+            },
+            "Xiangling": {
+               "element": "Pyro",
+               "rarity": 4,
+               "region": "Liyue",
+               "weapon": "Polearm",
+               "charURL": "Xiangling"
+            },
+            "Xingqiu": {
+               "element": "Hydro",
+               "rarity": 4,
+               "region": "Liyue",
+               "weapon": "Sword",
+               "charURL": "Xingqiu"
+            },
+            "Chongyun": {
+               "element": "Cryo",
+               "rarity": 4,
+               "region": "Liyue",
+               "weapon": "Claymore",
+               "charURL": "Chongyun"
+            },
+            "Qiqi": {
+               "element": "Cryo",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Sword",
+               "charURL": "Qiqi"
+            },
+            "Keqing": {
+               "element": "Electro",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Sword",
+               "charURL": "Keqing"
+            },
+            "Tartaglia": {
+               "element": "Hydro",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Bow",
+               "charURL": "Tartaglia"
+            },
+            "Zhongli": {
+               "element": "Geo",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Polearm",
+               "charURL": "Zhongli"
+            },
+            "Xinyan": {
+               "element": "Pyro",
+               "rarity": 4,
+               "region": "Liyue",
+               "weapon": "Claymore",
+               "charURL": "Xinyan"
+            },
+            "Ganyu": {
+               "element": "Cryo",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Bow",
+               "charURL": "Ganyu"
+            },
+            "Hu Tao": {
+               "element": "Pyro",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Polearm",
+               "charURL": "Hu_Tao"
+            },
+            "Yanfei": {
+               "element": "Pyro",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Catalyst",
+               "charURL": "Yanfei"
+            },
+            "Kamisato Ayaka": {
+               "element": "Cryo",
+               "rarity": 5,
+               "region": "Inazuma",
+               "weapon": "Sword",
+               "charURL": "Kamisato_Ayaka"
+            },
+            "Kaedehara Kazuha": {
+               "element": "Anemo",
+               "rarity": 5,
+               "region": "Inazuma",
+               "weapon": "Sword",
+               "charURL": "Kaedehara_Kazuha"
+            },
+            "Yoimiya": {
+               "element": "Pyro",
+               "rarity": 5,
+               "region": "Inazuma",
+               "weapon": "Bow",
+               "charURL": "Yoimiya"
+            },
+            "Sayu": {
+               "element": "Anemo",
+               "rarity": 4,
+               "region": "Inazuma",
+               "weapon": "Claymore",
+               "charURL": "Sayu"
+            },
+            "Raiden Shogun": {
+               "element": "Electro",
+               "rarity": 5,
+               "region": "Inazuma",
+               "weapon": "Polearm",
+               "charURL": "Raiden_Shogun"
+            },
+            "Kujou Sara": {
+               "element": "Electro",
+               "rarity": 4,
+               "region": "Inazuma",
+               "weapon": "Bow",
+               "charURL": "Kujou_Sara"
+            },
+            "Sangonomiya Kokomi": {
+               "element": "Hydro",
+               "rarity": 5,
+               "region": "Inazuma",
+               "weapon": "Catalyst",
+               "charURL": "Sangonomiya_Kokomi"
             }
-         });
+         }
 
-         for (var i = 0; i < charWinnerSlots.length; i++) {
-            var charWinner = charWinnerSlots[i]
-            var char = resultsTeam[resultsIndex];
-            var charURL;
+         function modeSwitch(mode) {
+            document.getElementById(selectionMode + 'BTN').classList.remove('currentMode');
+            document.getElementById(mode + 'BTN').classList.add('currentMode');
+            selectionMode = mode;
+         }
 
-               if (resultsTeam.length <= resultsIndex) {
-                  char = 'Slot #' + (i + 1);
-                  charWinner.firstElementChild.src = '';
+         function changeTeam(type, char) {
+            switch (type) {
+               case 'remove':
+                  var index = filterTeam.indexOf(char);
+
+                  filterTeam.splice(index, index > -1 ? 1 : 0);
+
+                  index = lockedTeam.indexOf(char);
+                  lockedTeam.splice(index, index > -1 ? 1 : 0);
+
+
+                  if (selectionMode == 'owned') {
+
+                     if (index > -1) {
+                        document.getElementsByClassName('winnerImg')[index].removeAttribute('style');
+                        document.getElementsByClassName('teamSlot')[index].lastElementChild.innerText = '';
+                        document.getElementsByClassName('teamSlot')[index].classList.remove('locked');
+                     }
+
+
+                     index = myTeam.indexOf(char);
+                     myTeam.splice(index, index > -1 ? 1 : 0);
+
+                  }
+
+                  break;
+               case 'add':
+
+                  if (!lockedTeam.includes(char)) {
+                     filterTeam.push(char);
+                  }
+
+                  if (selectionMode == 'owned') {
+                     myTeam.push(char);
+                  }
+
+                  break;
+            }
+         }
+
+         function tapChar(char) {
+            switch (selectionMode) {
+               case 'owned':
+                  var own_element;
+                  var temp;
+                  if (char.classList.contains('unowned')) {
+                     char.classList.remove('inactive');
+                     // char.classList.remove('unowned');
+
+                     own_element = 'owned_chars';
+                     changeTeam('add', char.innerText);
+                  } else {
+                     char.classList.add('inactive');
+                     // char.classList.add('unowned');
+
+                     own_element = 'unowned_chars'
+                     changeTeam('remove', char.innerText);
+
+                     var index = lockedTeam.indexOf(char.innerText);
+
+                     if (index > -1) {
+                        lockedTeam.splice(index, 1);
+                        console.log(true);
+                        document.getElementsByClassName('winnerImg')[index].removeAttribute('style');
+                        document.getElementsByClassName('teamSlot')[index].lastElementChild.innerText = '';
+                     }
+
+                  }
+
+                  char.classList.toggle('unowned');
+
+                  own_element = document.getElementById(own_element);
+                  own_element.appendChild(char);
+
+                  temp = [...own_element.children];
+
+                  temp.sort((a, b) => {
+                     if (a.id > b.id) {
+                        return 1;
+                     }
+                     if (b.id > a.id) {
+                        return -1;
+                     }
+                     return 0;
+                  });
+
+                  own_element.innerHTML = '';
+                  temp.forEach(x => own_element.appendChild(x));
+
+                  localStorage.myTeamGITeamRandom = JSON.stringify(myTeam);
+                  break;
+               case 'filter':
+                  if (char.classList.contains('inactive') && !char.classList.contains('unowned')) {
+                     char.classList.remove('inactive');
+                     changeTeam('add', char.innerText);
+                  } else {
+                     char.classList.add('inactive');
+                     changeTeam('remove', char.innerText);
+                  }
+
+                  break;
+               case 'slot1':
+               case 'slot2':
+               case 'slot3':
+               case 'slot4':
+                  var char = char.innerText;
+                  var index = parseInt(selectionMode.slice(-1)) - 1;
+                  var slot = document.getElementsByClassName('teamSlot')[index];
+
+                  if (!lockedTeam.includes(char)) {
+
+                     if (slot.classList.contains('locked')) {
+                        lockSlot(slot, index);
+                     }
+
+                     slot.firstElementChild.setAttribute('style', 'background-image: url(img/' + genshinCharacters[char].charURL + '.png); background-size: 100px;');
+                     slot.lastElementChild.innerText = char;
+                     lockSlot(slot, index);
+                  } else {
+                     var oldIndex = lockedTeam.indexOf(char);
+                     [lockedTeam[index], lockedTeam[oldIndex]] = [lockedTeam[oldIndex], lockedTeam[index]];
+
+                     var oldSlot = document.getElementsByClassName('teamSlot')[oldIndex];
+
+                     slot.appendChild(oldSlot.firstElementChild);
+                     slot.appendChild(oldSlot.firstElementChild);
+
+                     oldSlot.appendChild(slot.firstElementChild);
+                     oldSlot.appendChild(slot.firstElementChild);
+
+                     if (!lockedTeam[oldIndex]) {
+                        oldSlot.classList.remove('locked')
+                     }
+
+                     slot.classList.add('locked');
+
+
+
+
+
+                  }
+
+
+            }
+         }
+
+         function shuffle(array) {
+            let currentIndex = array.length,
+               randomIndex;
+
+            while (currentIndex != 0) {
+
+               randomIndex = Math.floor(Math.random() * currentIndex);
+               currentIndex--;
+
+               [array[currentIndex], array[randomIndex]] = [
+                  array[randomIndex], array[currentIndex]
+               ];
+            }
+
+            return array;
+         }
+
+         function randomizeTeam() {
+            shuffle(filterTeam);
+            shuffle(filterTeam);
+            shuffle(filterTeam);
+            shuffle(filterTeam);
+            shuffle(filterTeam);
+
+            var shuffledTeam = [...filterTeam];
+            var teamSlot = [...document.getElementsByClassName('teamSlot')];
+
+            teamSlot = teamSlot.filter(x => !x.classList.contains('locked'))
+
+            lockedTeam.forEach(item => {
+               var index = shuffledTeam.indexOf(item);
+               shuffledTeam.splice(index, index > -1 ? 1 : 0);
+            })
+
+            shuffledTeam = shuffledTeam.slice(0, 4);
+
+            while (shuffledTeam.length < 4) {
+               shuffledTeam.push(null);
+            }
+
+            teamSlot.forEach((slot, i) => {
+               var char = shuffledTeam[i];
+               if (char) {
+                  slot.firstElementChild.setAttribute('style', 'background-image: url(img/' + genshinCharacters[char].charURL + '.png); background-size: 100px;');
+                  slot.lastElementChild.innerText = (char);
+
                } else {
-                  charURL = char.replace(' ', '_');
-                  charWinner.firstElementChild.src = 'img/' + charURL + '.png';
-                  resultsIndex++;
-               }
-
-
-               charWinner.lastElementChild.innerText = char;
-         }
-
-         for (var i = 0; i < 4; i++) {
-            var char = document.getElementsByClassName('charWinner')[i].lastElementChild.innerText;
-
-            resultsTeam[i] = genshinCharacters[char] ? char : null;
-
-         }
-
-         // for (var i = 0; i < 4; i++) {
-         //    if (lockedSlots[i]) {
-         //       continue;
-         //    }
-         //
-         //    var charWinner = document.getElementsByClassName('charWinner')[i];
-         //    var char = resultsTeam[resultsIndex];
-         //    var charURL;
-         //
-         //    if (resultsTeam.length <= resultsIndex) {
-         //       char = 'Slot #' + (i + 1);
-         //       charWinner.firstElementChild.src = '';
-         //    } else {
-         //       charURL = char.replace(' ', '_');
-         //       charWinner.firstElementChild.src = 'img/' + charURL + '.png';
-         //       resultsIndex++;
-         //    }
-         //
-         //
-         //    charWinner.lastElementChild.innerText = char;
-         //
-         //    // var charProp = genshinCharacters[char];
-         //    // results.innerHTML += '<div class="charWinner">' + '<img src="img/' + charURL + '.png"></img><div class="charNames">' + char + '</div></div>';
-         //    // results.innerHTML += myTeams[i] + '<br>';
-         // }
-      }
-
-      function addCharacters() {
-         var characters = [];
-         var chooseChar = document.getElementById('chooseChar');
-
-         for (var char in genshinCharacters) {
-            characters.push(char);
-            // charProp = genshinCharacters[char];
-            // document.body.innerHTML += '<p>' + char + '</p>' + '<img src="' + charProp.img + '">';
-         }
-
-         characters.sort();
-
-         characters.forEach((char, i) => {
-            var charURL = char.replace(' ', '_')
-            // var charProp = genshinCharacters[char];
-            chooseChar.innerHTML += '<div class="charSelect" onclick="tapCharacter(this)" id="' + charURL + '">' + '<img src="img/' + charURL + '.png"></img><div class="charNames">' + char + '</div></div>';
-         });
-
-         document.body.innerHTML += '<div><button onclick="saveTeam()">Save Team</button></div>'
-
-      }
-
-      function tapCharacter(char) {
-         charName = char.id.replace('_', ' ');
-         if (char.classList.contains("inactive")) {
-            if (!char.classList.contains('not_owned')) {
-               char.classList.remove("inactive");
-               myTeams.push(charName);
-            }
-         } else {
-            char.classList.add("inactive");
-            if (myTeams.includes(charName)) {
-               myTeams.splice(myTeams.indexOf(charName), 1);
-            }
-
-         }
-      }
-
-      function loadTeam() {
-
-         if (localStorage.myTeams) {
-            myTeams = JSON.parse(localStorage.myTeams);
-
-            for (var char in genshinCharacters) {
-               if (myTeams.indexOf(char) == -1) {
-                  // console.log(char)
-                  char = document.getElementById(char.replace(' ', '_'));
-                  tapCharacter(char);
-                  char.classList.add('not_owned')
-               }
-
-            }
-
-            var chooseChar = document.getElementById('chooseChar');
-            var not_ownedSect = document.getElementById('not_ownedSect');
-            var chooseList = [...chooseChar.children];
-
-            var owned = [];
-            var missing = [];
-
-            chooseList.forEach((item, i) => {
-               if (myTeams.indexOf(item.id.replace('_', ' ')) > -1) {
-                  owned.push(item);
-               } else {
-                  missing.push(item);
+                  slot.firstElementChild.removeAttribute('style');
+                  slot.lastElementChild.innerText = ('');
                }
             });
 
-            chooseChar.innerHTML = '';
 
-            owned.forEach((item, i) => {
-               chooseChar.appendChild(item)
+            // for (var i = 0; i < teamSlot.length; i++) {
+            //    var slot = teamSlot[i];
+            //    var char = shuffledTeam[i];
+            //    if (char) {
+            //       slot.firstElementChild.setAttribute('style', 'background-image: url(img/' + genshinCharacters[char].charURL + '.png); background-size: 100px;');
+            //       slot.lastElementChild.innerText = (char);
+            //
+            //    } else {
+            //       slot.firstElementChild.removeAttribute('style');
+            //       slot.lastElementChild.innerText = ('');
+            //    }
+            // }
+         }
+
+         function clearTeam() {
+            var teamSlot = [...document.getElementsByClassName('teamSlot')];
+
+            teamSlot = teamSlot.filter(x => !x.classList.contains('locked'))
+
+            teamSlot.forEach(slot => {
+               slot.firstElementChild.removeAttribute('style');
+               slot.lastElementChild.innerText = ('');
             });
 
-            missing.forEach((item, i) => {
-               not_ownedSect.appendChild(item)
-            });
+         }
 
+         function lockSlot(slot, index) {
+            var char = slot.innerText;
+            if (slot.classList.contains('locked')) {
+               slot.classList.remove('locked');
 
+               if (genshinCharacters[char]) {
+                  filterTeam.push(char);
+               }
 
-            // console.log(chooseChar.children);
-
-         } else {
-            for (var char in genshinCharacters) {
-               myTeams.push(char);
+               lockedTeam[index] = null;
+            } else {
+               slot.classList.add('locked');
+               lockedTeam[index] = genshinCharacters[char] ? char : null;
+               var index = filterTeam.indexOf(char)
+               filterTeam.splice(index, index > -1 ? 1 : 0);
             }
          }
 
+         function loadTeam() {
+            if (localStorage.myTeamGITeamRandom) {
+               myTeam = JSON.parse(localStorage.myTeamGITeamRandom);
+               filterTeam = [...myTeam];
+
+               var owned_chars = document.getElementById('owned_chars');
+               var unowned_chars = document.getElementById('unowned_chars');
+
+               var sortList = [...owned_chars.children];
+               var owned = [];
+               var unowned = [];
+
+               sortList.forEach(x => {
+                  if (myTeam.indexOf(x.innerText) < 0) {
+                     unowned_chars.appendChild(x);
+                     x.classList.add('inactive');
+                     x.classList.add('unowned');
+                  }
+               })
 
 
-      }
-
-      function saveTeam() {
-         // var saveTeams = [];
-
-         var saveTeams = [...document.getElementById('chooseChar').children];
-
-         for (var i = 0; i < saveTeams.length; i++) {
-            saveTeams[i] = saveTeams[i].id.replace('_', ' ');
-         }
-
-         console.log(saveTeams);
-
-
-
-         // for (var char in genshinCharacters) {
-         //    var charURL = char.replace(' ', '_');
-         //    if (!document.getElementById(charURL).classList.contains('inactive')) {
-         //       saveTeams.push(char);
-         //    }
-         // }
-         localStorage.myTeams = JSON.stringify(saveTeams);
-      }
-
-      function lockSlot(slot, index) {
-         if (slot.classList.contains('locked')) {
-            lockedSlots[index] = null;
-            slot.classList.remove('locked');
-         } else {
-            lockedSlots[index] = slot.innerText;
-            slot.classList.add('locked');
-         }
-      }
-
-      function drag(ev) {
-         ev.dataTransfer.setData("text", ev.target.id);
-      }
-
-      function drop(ev, el) {
-         ev.preventDefault();
-         var data = ev.dataTransfer.getData("text");
-         var div = document.getElementById(data)
-         el.appendChild(div);
-
-         if (el.id == "chooseChar") {
-            div.classList.remove('not_owned');
-            div.classList.remove('inactive');
-         } else {
-            div.classList.add('not_owned');
-            div.classList.add('inactive');
-         }
-
-         var temp = [...el.children]
-         temp.sort((a, b) => {
-            if (a.id > b.id) {
-               return 1;
-            }
-            if (b.id > a.id) {
-               return -1;
-            }
-            return 0;
-         });
-
-         el.innerHTML = '';
-         temp.forEach((item, i) => {
-            el.appendChild(item);
-         });
-
-
-
-      }
-
-      function winnerDrop(ev, el, slot) {
-         ev.preventDefault();
-         var data = ev.dataTransfer.getData("text");
-         var char = data.replace('_', ' ');
-         var div = document.getElementById(data);
-
-         if (!resultsTeam.includes(char) && !div.classList.contains('not_owned')) {
-            el.firstElementChild.src = 'img/' + data + '.png';
-            el.lastElementChild.innerText = char;
-
-            lockSlot(el, slot);
-            el.classList.add('locked')
-            resultsTeam[slot] = char;
-            lockedSlots[slot] = char;
-         }
-
-
-      }
-
-      function allowDrop(ev) {
-         ev.preventDefault();
-      }
-
-      function clearTeams() {
-
-         for (var i = 0; i < 4; i++) {
-            var charWinner = document.getElementsByClassName('charWinner')[i];
-
-            if (!charWinner.classList.contains('locked')) {
-               charWinner.lastElementChild.innerText = 'Slot #' + (i + 1);
-               charWinner.firstElementChild.src = '';
             }
          }
 
-      }
+         loadTeam();
+      </script>
+   </body>
 
-      for (var i = 0; i < document.getElementsByClassName('charSelect').length; i++) {
-         var char = document.getElementsByClassName('charSelect')[i];
-         char.draggable = true;
-         char.setAttribute('ondragstart', 'drag(event)');
-      }
-
-
-
-      // addCharacters();
-      loadTeam();
-   </script>
-</body>
-
-</html>
+   </html>
