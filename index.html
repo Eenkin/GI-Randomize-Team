@@ -117,6 +117,14 @@
             border-color: lightgray !important;
             opacity: 33%;
          }
+
+         #debugCheck{
+            color: white;
+         }
+
+         .hide{
+            display: none;
+         }
       </style>
    </head>
 
@@ -291,6 +299,21 @@
       <div class="mainSect">
          <h1>Characters I Don't Have:</h1>
          <div id="unowned_chars"></div>
+      </div>
+      <br><br>
+
+      <button onclick="viewDebug()">View Debug</button>
+
+      <div id="debugCheck" class="hide">
+         <h3>Debug</h3>
+         <b>MyTeam</b>
+         <p id="myTeamTxt"></p>
+         <b>FilterTeam</b>
+         <p id="filterTeamTxt"></p>
+         <b>ShuffleTeam</b>
+         <p id="shuffleTeamTxt"></p>
+         <b>LockedTeam</b>
+         <p id="lockedTeamTxt"></p>
       </div>
 
 
@@ -841,6 +864,12 @@
             });
 
 
+            document.getElementById('myTeamTxt').innerText = myTeam;
+            document.getElementById('filterTeamTxt').innerText = filterTeam;
+            document.getElementById('shuffleTeamTxt').innerText = shuffledTeam;
+            document.getElementById('lockedTeamTxt').innerText = lockedTeam;
+
+
             // for (var i = 0; i < teamSlot.length; i++) {
             //    var slot = teamSlot[i];
             //    var char = shuffledTeam[i];
@@ -907,6 +936,11 @@
 
 
             }
+         }
+
+
+         function viewDebug(){
+            document.getElementById('debugCheck').classList.toggle('hide');
          }
 
          loadTeam();
