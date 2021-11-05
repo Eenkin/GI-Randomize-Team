@@ -26,6 +26,7 @@
             width: 100px;
             margin: 5px;
             cursor: pointer;
+            position: relative;
          }
 
          .charSelect img,
@@ -74,6 +75,12 @@
             padding: 0;
             margin-right: 20px;
             display: inline-grid;
+         }
+
+         .filterLabels{
+            font-weight: 1000;
+            font-size: 2em;
+            color: lightgreen;
          }
 
          #team_buttons button:hover {
@@ -125,6 +132,79 @@
          .hide{
             display: none;
          }
+
+         label{
+            width: 2em;
+            height: 2em;
+            opacity: 0.5;
+            margin: 0 0.75em;
+            display: inline-block;
+            cursor: pointer;
+
+            position: relative;
+            top: 0.4em;
+         }
+
+         label img{
+            width: inherit;
+            height: inherit;
+         }
+
+         /* #travlerElementInput input, #filterElementInput input, #filterRegionInput input{
+            display: none;
+         } */
+
+         [type=radio]{
+            display: none;
+         }
+
+         [type=radio]:checked + label, [type=radio]:hover + label{
+            opacity: 1;
+         }
+
+         /* #travlerElementInput input:checked + .elementIcon,#travlerElementInput input:hover + .elementIcon,#filterElementInput input:checked + .elementIcon, #filterElementInput input:hover + .elementIcon, #filterRegionInput input:checked + .regionIcon, #filterRegionInput input:hover + .regionIcon{
+            opacity: 1;
+         } */
+
+         .labelTxt{
+            font-weight:bold;
+            font-size: 2em;
+            color: white;
+            top:0;
+            width: fit-content;
+            height: fit-content;
+         }
+
+         .filterTab{
+            display: none;
+
+         }
+
+         .filterTabDisplay{
+            display:block;
+            min-height: 3em;
+            vertical-align: center;
+            margin: 0;
+            padding: 1em;
+         }
+
+         #filterTabChoice{
+         }
+
+         .filterTabDisplay, #filterTabChoice label{
+            background-color: #a7167d;
+         }
+
+         #filterTabChoice label{
+            width: fit-content;
+            height: fit-content;
+            padding: 0.5em;
+            color: white;
+            margin:0;
+            font-size: 1.5em;
+            font-weight: 1000;
+            top:0;
+         }
       </style>
    </head>
 
@@ -161,6 +241,119 @@
                <button id="slot2BTN" onclick="modeSwitch('slot2')">Add to Slot 2</button>
                <button id="slot3BTN" onclick="modeSwitch('slot3')">Add to Slot 3</button>
                <button id="slot4BTN" onclick="modeSwitch('slot4')">Add to Slot 4</button>
+
+               <br>
+
+               <span class="filterLabels">Traveler's Element:</span>
+               <span id="travlerElementInput">
+                  <input onchange="changeTravelerElement();" type="radio" id="travelerAnemoBtn" value="Anemo" name="travelerElement" checked>
+                  <label for="travelerAnemoBtn" class="elementIcon"><img src="img/element/rev/Anemo.png" alt="Anemo"></label>
+
+                  <input onchange="changeTravelerElement();" type="radio" id="travelerGeoBtn" value="Geo" name="travelerElement">
+                  <label for="travelerGeoBtn" class="elementIcon"><img src="img/element/rev/Geo.png" alt="Geo"></label>
+
+                  <input onchange="changeTravelerElement();" type="radio" id="travelerElectroBtn" value="Electro" name="travelerElement">
+                  <label for="travelerElectroBtn" class="elementIcon"><img src="img/element/rev/Electro.png" alt="Electro"></label>
+
+               </span>
+               <br>
+
+               <h2 style="color: white; margin-bottom:0.5em; font-weight: 1000; font-size:2.25em;">FILTER</h2>
+
+               <div id="filterSection">
+                  <div id="filterTabChoice">
+                     <input onchange="filterType();" type="radio" id="filterElementBtn" value="0" name="filterType" checked>
+                     <label for="filterElementBtn" class="">Element</label>
+
+                     <input onchange="filterType();" type="radio" id="filterWeaponBtn" value="1" name="filterType">
+                     <label for="filterWeaponBtn" class="">Weapon</label>
+
+                     <input onchange="filterType();" type="radio" id="filterRegionBtn" value="2" name="filterType">
+                     <label for="filterRegionBtn" class="">Region</label>
+
+                     <input onchange="filterType();" type="radio" id="filterSkillBtn" value="3" name="filterType">
+                     <label for="filterSkillBtn" class="">Skill</label>
+                  </div>
+                  <div class="filterTab filterTabDisplay">
+                     <input onchange="filterChoices();" type="radio" id="filterAnemoBtn" value="Anemo" name="elementFilter">
+                     <label for="filterAnemoBtn" class="elementIcon"><img src="img/element/rev/Anemo.png" alt="Anemo"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterGeoBtn" value="Geo" name="elementFilter">
+                     <label for="filterGeoBtn" class="elementIcon"><img src="img/element/rev/Geo.png" alt="Geo"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterElectroBtn" value="Electro" name="elementFilter">
+                     <label for="filterElectroBtn" class="elementIcon"><img src="img/element/rev/Electro.png" alt="Electro"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterHydroBtn" value="Hydro" name="elementFilter">
+                     <label for="filterHydroBtn" class="elementIcon"><img src="img/element/rev/Hydro.png" alt="Hydro"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterPyroBtn" value="Pyro" name="elementFilter">
+                     <label for="filterPyroBtn" class="elementIcon"><img src="img/element/rev/Pyro.png" alt="Pyro"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterCryoBtn" value="Cryo" name="elementFilter">
+                     <label for="filterCryoBtn" class="elementIcon"><img src="img/element/rev/Cryo.png" alt="Cryo"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterAllBtnElement" value="All" name="elementFilter" checked>
+                     <label for="filterAllBtnElement" class="elementIcon labelTxt">ALL</label>
+                  </div>
+                  <div class="filterTab">
+                     <input onchange="filterChoices();" type="radio" id="filterSwordBtn" value="Sword" name="weaponFilter">
+                     <label for="filterSwordBtn" class="weaponIcon"><img src="img/weapon/Icon_Sword.png" alt="Sword"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterClaymoreBtn" value="Claymore" name="weaponFilter">
+                     <label for="filterClaymoreBtn" class="weaponIcon"><img src="img/weapon/Icon_Claymore.png" alt="Claymore"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterBowBtn" value="Bow" name="weaponFilter">
+                     <label for="filterBowBtn" class="weaponIcon"><img src="img/weapon/Icon_Bow.png" alt="Bow"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterCatalystBtn" value="Catalyst" name="weaponFilter">
+                     <label for="filterCatalystBtn" class="weaponIcon"><img src="img/weapon/Icon_Catalyst.png" alt="Catalyst"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterPolearmBtn" value="Polearm" name="weaponFilter">
+                     <label for="filterPolearmBtn" class="weaponIcon"><img src="img/weapon/Icon_Polearm.png" alt="Polearm"></label>
+
+
+                     <input onchange="filterChoices();" type="radio" id="filterAllBtnWeapon" value="All" name="weaponFilter" checked>
+                     <label for="filterAllBtnWeapon" class="elementIcon labelTxt">ALL</label>
+                  </div>
+
+                  <div class="filterTab">
+                     <input onchange="filterChoices();" type="radio" id="filterMondstatBtn" value="Mondstat" name="regionFilter">
+                     <label for="filterMondstatBtn" class="regionIcon" title="Mondstat"><img src="img/region/rev/Mondstat.png" alt="Mondstat"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterLiyueBtn" value="Liyue" name="regionFilter">
+                     <label for="filterLiyueBtn" class="regionIcon" title="Liyue"><img src="img/region/rev/Liyue.png" alt="Liyue"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterInazumaBtn" value="Inazuma" name="regionFilter">
+                     <label for="filterInazumaBtn" class="regionIcon" title="Inazuma"><img src="img/region/rev/Inazuma.png" alt="Inazuma"></label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterOutlanderBtn" value="Outlander" name="regionFilter">
+                     <label for="filterOutlanderBtn" class="regionIcon labelTxt">OUTLANDER</label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterAllBtnRegion" value="All" name="regionFilter" checked>
+                     <label for="filterAllBtnRegion" class="regionIcon labelTxt">ALL</label>
+                  </div>
+
+                  <div class="filterTab">
+                     <input onchange="filterChoices();" type="radio" id="filterHealBtn" value="Heal" name="SkillFilter">
+                     <label for="filterHealBtn" class="skillIcon labelTxt" style="margin-left: 0;">PARTY HEAL</label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterSheildBtn" value="Shield" name="SkillFilter">
+                     <label for="filterSheildBtn" class="skillIcon labelTxt">SHIELD</label>
+
+                     <!-- <input onchange="filterChoices();" type="radio" id="filterDMGUpBtn" value="DMG Up" name="SkillFilter">
+                     <label for="filterDMGUpBtn" class="SkillIcon">DMG UP</label>
+
+                     <input onchange="filterChoices();" type="radio" id="filterDeSkillBtn" value="DeSkill" name="SkillFilter">
+                     <label for="filterDeSkillBtn" class="SkillIcon">DEBUFF</label> -->
+
+                     <input onchange="filterChoices();" type="radio" id="filterAllBtnSkill" value="All" name="SkillFilter" checked>
+                     <label for="filterAllBtnSkill" class="skillIcon labelTxt">ALL</label>
+                  </div>
+               </div>
+
+
+               </span>
             </span>
          </div>
       </div>
@@ -269,6 +462,9 @@
             <div class="charSelect" onclick="tapChar(this)" id="Traveler"><img src="img/Traveler.png">
                <div class="char_name">Traveler</div>
             </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Thoma"><img src="img/Thoma.png">
+               <div class="char_name">Thoma</div>
+            </div>
             <div class="charSelect" onclick="tapChar(this)" id="Venti"><img src="img/Venti.png">
                <div class="char_name">Venti</div>
             </div>
@@ -302,9 +498,9 @@
       </div>
       <br><br>
 
-      <button onclick="viewDebug()">View Debug</button>
+      <button onclick="viewDebug()" style="display: none!important;">View Debug</button>
 
-      <div id="debugCheck" class="hide">
+      <div id="debugCheck" class="hide" style="display: none!important;">
          <h3>Debug</h3>
          <b>MyTeam</b>
          <p id="myTeamTxt"></p>
@@ -375,7 +571,7 @@
 
          var genshinCharacters = {
             "Traveler": {
-               "element": "Any",
+               "element": "Anemo",
                "region": "Outlander",
                "rarity": 5,
                "weapon": "Sword",
@@ -660,6 +856,13 @@
                "region": "Inazuma",
                "weapon": "Catalyst",
                "charURL": "Sangonomiya_Kokomi"
+            },
+            "Thoma": {
+               "element": "Pyro",
+               "rarity": 4,
+               "region": "Inazuma",
+               "weapon": "Polearm",
+               "charURL": "Thoma"
             }
          }
 
@@ -795,7 +998,7 @@
                      if (lockedTeam.includes(char)) {
                         [lockedTeam[index], lockedTeam[oldIndex]] = [lockedTeam[oldIndex], lockedTeam[index]];
                      } else {
-                        lockedTeam[index] = char; 
+                        lockedTeam[index] = char;
                      }
 
                      [shuffledTeam[index], shuffledTeam[oldIndex]] = [shuffledTeam[oldIndex], shuffledTeam[index]];
@@ -847,6 +1050,17 @@
          }
 
          function randomizeTeam() {
+            filterTeam = [...document.getElementById('owned_chars').children];
+
+            filterTeam = filterTeam.filter(a => {
+               return !a.classList.contains('hide') && !a.classList.contains('inactive')
+            });
+
+            filterTeam.forEach((item, i) => {
+               filterTeam[i] = item.lastElementChild.innerText;
+            });
+
+
             shuffle(filterTeam);
             shuffle(filterTeam);
             shuffle(filterTeam);
@@ -926,7 +1140,7 @@
 
          function loadTeam() {
             if (localStorage.myTeamGITeamRandom) {
-               myTeam = [... new Set(JSON.parse(localStorage.myTeamGITeamRandom))];
+               myTeam = [...new Set(JSON.parse(localStorage.myTeamGITeamRandom))];
                filterTeam = [...myTeam];
 
                var owned_chars = document.getElementById('owned_chars');
@@ -946,11 +1160,80 @@
 
 
             }
+
+            if (localStorage.travelerElement) {
+               var travlerElementInput = document.getElementById('travlerElementInput').children;
+
+               for (var i = 0; i < travlerElementInput.length; i++) {
+
+                  if (travlerElementInput[i].value == localStorage.travelerElement) {
+                     travlerElementInput[i].checked = true;
+                     genshinCharacters["Traveler"].element = localStorage.travelerElement;
+                     break;
+                  }
+               }
+            }
          }
 
 
-         function viewDebug(){
+         function viewDebug() {
             document.getElementById('debugCheck').classList.toggle('hide');
+         }
+
+         function changeTravelerElement() {
+            var travelerElement = document.querySelector('input[name="travelerElement"]:checked').value;
+            genshinCharacters["Traveler"].element = travelerElement;
+            localStorage.travelerElement = travelerElement;
+
+            filterChoices();
+         }
+
+         function filterType(){
+            var type = document.querySelector('input[name="filterType"]:checked').value;
+            var tabs = [...document.getElementsByClassName('filterTab')];
+
+            tabs.forEach((item, i) => {
+               item.classList.remove('filterTabDisplay');
+
+               if (i == type) {
+                  item.classList.add('filterTabDisplay');
+               }
+            });
+
+         }
+
+         function filterChoices() {
+            var elementFilter = document.querySelector('input[name="elementFilter"]:checked').value;
+            var regionFilter = document.querySelector('input[name="regionFilter"]:checked').value;
+            var weaponFilter = document.querySelector('input[name="weaponFilter"]:checked').value;
+            var charSelect = [...document.getElementsByClassName('charSelect')]
+
+            charSelect.forEach(item => {
+               item.classList.remove('hide');
+            });
+
+            charSelect.forEach(item => {
+
+               if (elementFilter != 'All') {
+                  if (genshinCharacters[item.lastElementChild.innerText].element != elementFilter) {
+                     item.classList.add('hide');
+                  }
+               }
+
+               if (weaponFilter != 'All') {
+                  if (genshinCharacters[item.lastElementChild.innerText].weapon != weaponFilter) {
+                     item.classList.add('hide');
+                  }
+               }
+
+               if (regionFilter != 'All') {
+                  if (genshinCharacters[item.lastElementChild.innerText].region != regionFilter) {
+                     item.classList.add('hide');
+                  }
+               }
+
+            })
+
          }
 
          loadTeam();
