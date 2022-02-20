@@ -10,7 +10,8 @@
             max-width: 1000px;
             margin: 10px auto;
             background-color: #313038;
-            user-select: none
+            user-select: none;
+            font-family: Arial;
          }
 
          #resultsSection {
@@ -137,7 +138,7 @@
             width: 2em;
             height: 2em;
             opacity: 0.5;
-            margin: 0 0.75em;
+            margin: 0 0.75rem;
             display: inline-block;
             cursor: pointer;
 
@@ -166,13 +167,20 @@
             opacity: 1;
          } */
 
-         .labelTxt{
+         .labelTxt, .subnav label{
             font-weight:bold;
             font-size: 2em;
             color: white;
             top:0;
             width: fit-content;
             height: fit-content;
+         }
+
+         .subnav img{
+            width: 1em;
+            height: 1em;
+            position: relative;
+            top:5px;
          }
 
          .filterTab{
@@ -195,7 +203,7 @@
             background-color: #a7167d;
          }
 
-         #filterTabChoice label{
+         /* #filterTabChoice label{
             width: fit-content;
             height: fit-content;
             padding: 0.5em;
@@ -204,7 +212,67 @@
             font-size: 1.5em;
             font-weight: 1000;
             top:0;
+         } */
+
+         .navButtons li{
+            /* cursor:pointer; */
+            display: inline;
          }
+
+         .subnav{
+            display: none;
+            /* background-color: darkblue; */
+            margin: 0;
+            padding: 1em 0;
+            float:left;
+            width: 100%;
+            max-width: 1000px;
+         }
+
+         .selectionNav .subnav, .selectionNav label{
+            background-color: darkblue;
+         }
+
+         .filterNav .subnav, .filterNav label{
+            background-color: purple;
+         }
+
+         .navButtons{
+            list-style-type: none;
+            margin: 0;
+            /* margin-bottom: 2em; */
+            padding: 0;
+            overflow: hidden;
+            /* background-color: green; */
+         }
+
+         .navButtons > li > label{
+            width: auto;
+            color: white;
+            font-weight: 1000;
+            font-size: 1.5em;
+            margin: 0 0.1em 0 0;
+            padding: .5em .75em;
+         }
+
+         .navButtons > li > input[type="radio"]:checked+label+ul{
+            /* background-color: white!important; */
+            display: block!important;
+
+         }
+
+         h2{
+            color: white; margin-bottom:0.5em; font-weight: 1000; font-size:2.25em;
+         }
+
+         #applyCustomFilterBtn{
+            color: lightgreen!important;
+         }
+
+         #applyCustomFilterBtn:hover{
+            color: white!important;
+         }
+
       </style>
    </head>
 
@@ -231,20 +299,46 @@
             <button onclick="randomizeTeam()">Randomize Team</button>
             <button onclick="clearTeam()">Clear Team</button>
 
-            <h2 style="color: white;">Selection Mode</h2>
+            <h2>SELECTION MODE</h2>
+
             <span>
-               <button id="filterBTN" onclick="modeSwitch('filter')" class="currentMode">Filter</button>
-               <button id="ownedBTN" onclick="modeSwitch('owned')">Owned</button>
 
-               <br>
-               <button id="slot1BTN" onclick="modeSwitch('slot1')">Add to Slot 1</button>
-               <button id="slot2BTN" onclick="modeSwitch('slot2')">Add to Slot 2</button>
-               <button id="slot3BTN" onclick="modeSwitch('slot3')">Add to Slot 3</button>
-               <button id="slot4BTN" onclick="modeSwitch('slot4')">Add to Slot 4</button>
+               <ul class="navButtons selectionNav">
+                  <li>
+                     <input type="radio" id="filterTab" onchange="changeMode('filter')" name="selectionMode" value="filter" checked>
+                     <label for="filterTab">Filter</label>
+                  </li>
+                  <li>
+                     <input type="radio" id="ownedTab" onchange="changeMode('owned')" name="selectionMode" value="owned">
+                     <label for="ownedTab">Owned</label>
+                  </li>
+                  <li>
+                     <input type="radio" id="slotTab" onchange="changeMode(''); [...document.getElementsByName('slotSelected')].forEach(i => i.checked = false);" name="selectionMode" value="addSlot">
+                     <label for="slotTab">Add to Slot</label>
+                     <ul class="subnav">
+                        <li>
+                           <input type="radio" id="slot1LI" onchange="changeMode('slot1')" name="slotSelected" value="slot1">
+                           <label for="slot1LI">1st</label>
+                        </li>
+                        <li>
+                           <input type="radio" id="slot2LI" onchange="changeMode('slot2')" name="slotSelected" value="slot2">
+                           <label for="slot2LI">2nd</label>
+                        </li>
+                        <li>
+                           <input type="radio" id="slot3LI" onchange="changeMode('slot3')" name="slotSelected" value="slot3">
+                           <label for="slot3LI">3rd</label>
+                        </li>
+                        <li>
+                           <input type="radio" id="slot4LI" onchange="changeMode('slot4')" name="slotSelected" value="slot4">
+                           <label for="slot4LI">4th</label>
+                        </li>
+                     </ul>
+                  </li>
 
-               <br>
+               </ul>
 
-               <span class="filterLabels">Traveler's Element:</span>
+
+               <h2>TRAVELER'S ELEMENT</h2>
                <span id="travlerElementInput">
                   <input onchange="changeTravelerElement();" type="radio" id="travelerAnemoBtn" value="Anemo" name="travelerElement" checked>
                   <label for="travelerAnemoBtn" class="elementIcon"><img src="img/element/rev/Anemo.png" alt="Anemo"></label>
@@ -260,100 +354,139 @@
 
                <h2 style="color: white; margin-bottom:0.5em; font-weight: 1000; font-size:2.25em;">FILTER</h2>
 
-               <div id="filterSection">
-                  <div id="filterTabChoice">
-                     <input onchange="filterType();" type="radio" id="filterElementBtn" value="0" name="filterType" checked>
+               <ul class="navButtons filterNav">
+                  <li>
+                     <input onchange="/*filtertype();*/" type="radio" id="filterElementBtn" value="0" name="changeFilter" checked>
                      <label for="filterElementBtn" class="">Element</label>
 
-                     <input onchange="filterType();" type="radio" id="filterWeaponBtn" value="1" name="filterType">
+                     <ul class="subnav">
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterAnemoBtn" value="Anemo" name="elementFilter">
+                           <label for="filterAnemoBtn" class="elementIcon"><img src="img/element/rev/Anemo.png" alt="Anemo"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterGeoBtn" value="Geo" name="elementFilter">
+                           <label for="filterGeoBtn" class="elementIcon"><img src="img/element/rev/Geo.png" alt="Geo"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterElectroBtn" value="Electro" name="elementFilter">
+                           <label for="filterElectroBtn" class="elementIcon"><img src="img/element/rev/Electro.png" alt="Electro"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterHydroBtn" value="Hydro" name="elementFilter">
+                           <label for="filterHydroBtn" class="elementIcon"><img src="img/element/rev/Hydro.png" alt="Hydro"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterPyroBtn" value="Pyro" name="elementFilter">
+                           <label for="filterPyroBtn" class="elementIcon"><img src="img/element/rev/Pyro.png" alt="Pyro"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterCryoBtn" value="Cryo" name="elementFilter">
+                           <label for="filterCryoBtn" class="elementIcon"><img src="img/element/rev/Cryo.png" alt="Cryo"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterAllBtnElement" value="All" name="elementFilter" checked>
+                           <label for="filterAllBtnElement" class="elementIcon labelTxt">ALL</label>
+                        </li>
+                     </ul>
+
+
+                  <li>
+                     <input onchange="/*filtertype();*/" type="radio" id="filterWeaponBtn" value="1" name="changeFilter">
                      <label for="filterWeaponBtn" class="">Weapon</label>
 
-                     <input onchange="filterType();" type="radio" id="filterRegionBtn" value="2" name="filterType">
+                     <ul class="subnav">
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterSwordBtn" value="Sword" name="weaponFilter">
+                           <label for="filterSwordBtn" class="weaponIcon"><img src="img/weapon/Icon_Sword.png" alt="Sword"></label>
+                        </li>
+
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterClaymoreBtn" value="Claymore" name="weaponFilter">
+                           <label for="filterClaymoreBtn" class="weaponIcon"><img src="img/weapon/Icon_Claymore.png" alt="Claymore"></label>
+                        </li>
+
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterBowBtn" value="Bow" name="weaponFilter">
+                           <label for="filterBowBtn" class="weaponIcon"><img src="img/weapon/Icon_Bow.png" alt="Bow"></label>
+                        </li>
+
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterCatalystBtn" value="Catalyst" name="weaponFilter">
+                           <label for="filterCatalystBtn" class="weaponIcon"><img src="img/weapon/Icon_Catalyst.png" alt="Catalyst"></label>
+                        </li>
+
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterPolearmBtn" value="Polearm" name="weaponFilter">
+                           <label for="filterPolearmBtn" class="weaponIcon"><img src="img/weapon/Icon_Polearm.png" alt="Polearm"></label>
+                        </li>
+
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterAllBtnWeapon" value="All" name="weaponFilter" checked>
+                           <label for="filterAllBtnWeapon" class="elementIcon labelTxt">ALL</label>
+                        </li>
+
+                     </ul>
+                  </li>
+
+                  <li>
+                     <input onchange="/*filtertype();*/" type="radio" id="filterRegionBtn" value="2" name="changeFilter">
                      <label for="filterRegionBtn" class="">Region</label>
 
-                     <input onchange="filterType();" type="radio" id="filterSkillBtn" value="3" name="filterType">
-                     <label for="filterSkillBtn" class="">Skill</label>
-                  </div>
-                  <div class="filterTab filterTabDisplay">
-                     <input onchange="filterChoices();" type="radio" id="filterAnemoBtn" value="Anemo" name="elementFilter">
-                     <label for="filterAnemoBtn" class="elementIcon"><img src="img/element/rev/Anemo.png" alt="Anemo"></label>
+                     <ul class="subnav">
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterMondstadtBtn" value="Mondstadt" name="regionFilter">
+                           <label for="filterMondstadtBtn" class="regionIcon" title="Mondstadt"><img src="img/region/rev/Mondstadt.png" alt="Mondstadt"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterLiyueBtn" value="Liyue" name="regionFilter">
+                           <label for="filterLiyueBtn" class="regionIcon" title="Liyue"><img src="img/region/rev/Liyue.png" alt="Liyue"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterInazumaBtn" value="Inazuma" name="regionFilter">
+                           <label for="filterInazumaBtn" class="regionIcon" title="Inazuma"><img src="img/region/rev/Inazuma.png" alt="Inazuma"></label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterOutlanderBtn" value="Outlander" name="regionFilter">
+                           <label for="filterOutlanderBtn" class="regionIcon labelTxt">OUTLANDER</label>
+                        </li>
+                        <li>
+                           <input onchange="filterChoices();" type="radio" id="filterAllBtnRegion" value="All" name="regionFilter" checked>
+                           <label for="filterAllBtnRegion" class="regionIcon labelTxt">ALL</label>
+                        </li>
 
-                     <input onchange="filterChoices();" type="radio" id="filterGeoBtn" value="Geo" name="elementFilter">
-                     <label for="filterGeoBtn" class="elementIcon"><img src="img/element/rev/Geo.png" alt="Geo"></label>
+                     </ul>
+                  </li>
 
-                     <input onchange="filterChoices();" type="radio" id="filterElectroBtn" value="Electro" name="elementFilter">
-                     <label for="filterElectroBtn" class="elementIcon"><img src="img/element/rev/Electro.png" alt="Electro"></label>
+               </ul>
 
-                     <input onchange="filterChoices();" type="radio" id="filterHydroBtn" value="Hydro" name="elementFilter">
-                     <label for="filterHydroBtn" class="elementIcon"><img src="img/element/rev/Hydro.png" alt="Hydro"></label>
+               <br>
 
-                     <input onchange="filterChoices();" type="radio" id="filterPyroBtn" value="Pyro" name="elementFilter">
-                     <label for="filterPyroBtn" class="elementIcon"><img src="img/element/rev/Pyro.png" alt="Pyro"></label>
+               <h2>CUSTOM FILTER</h2>
+               <select id="customFilterSelection" style="height: 2em;" onchange="console.log(this.value)">
+                  <option value="1">Custom 1</option>
+                  <option value="2">Custom 2</option>
+                  <option value="3">Custom 3</option>
+                  <option value="4">Custom 4</option>
+                  <option value="5">Custom 5</option>
+                  <option value="6">Custom 6</option>
+                  <option value="7">Custom 7</option>
+                  <option value="8">Custom 8</option>
+                  <option value="9">Custom 9</option>
+                  <option value="10">Custom 10</option>
+               </select>
+               &nbsp;
+               <button onclick="customFilterRename();">Rename</button>
+               <button onclick="customFilterSave()">Save</button>
+               <button onclick="changeAllState('active');">Select All</button>
+               <button onclick="changeAllState('inactive');">Hide All</button>
 
-                     <input onchange="filterChoices();" type="radio" id="filterCryoBtn" value="Cryo" name="elementFilter">
-                     <label for="filterCryoBtn" class="elementIcon"><img src="img/element/rev/Cryo.png" alt="Cryo"></label>
+               <br><br>
 
-                     <input onchange="filterChoices();" type="radio" id="filterAllBtnElement" value="All" name="elementFilter" checked>
-                     <label for="filterAllBtnElement" class="elementIcon labelTxt">ALL</label>
-                  </div>
-                  <div class="filterTab">
-                     <input onchange="filterChoices();" type="radio" id="filterSwordBtn" value="Sword" name="weaponFilter">
-                     <label for="filterSwordBtn" class="weaponIcon"><img src="img/weapon/Icon_Sword.png" alt="Sword"></label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterClaymoreBtn" value="Claymore" name="weaponFilter">
-                     <label for="filterClaymoreBtn" class="weaponIcon"><img src="img/weapon/Icon_Claymore.png" alt="Claymore"></label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterBowBtn" value="Bow" name="weaponFilter">
-                     <label for="filterBowBtn" class="weaponIcon"><img src="img/weapon/Icon_Bow.png" alt="Bow"></label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterCatalystBtn" value="Catalyst" name="weaponFilter">
-                     <label for="filterCatalystBtn" class="weaponIcon"><img src="img/weapon/Icon_Catalyst.png" alt="Catalyst"></label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterPolearmBtn" value="Polearm" name="weaponFilter">
-                     <label for="filterPolearmBtn" class="weaponIcon"><img src="img/weapon/Icon_Polearm.png" alt="Polearm"></label>
-
-
-                     <input onchange="filterChoices();" type="radio" id="filterAllBtnWeapon" value="All" name="weaponFilter" checked>
-                     <label for="filterAllBtnWeapon" class="elementIcon labelTxt">ALL</label>
-                  </div>
-
-                  <div class="filterTab">
-                     <input onchange="filterChoices();" type="radio" id="filterMondstatBtn" value="Mondstat" name="regionFilter">
-                     <label for="filterMondstatBtn" class="regionIcon" title="Mondstat"><img src="img/region/rev/Mondstat.png" alt="Mondstat"></label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterLiyueBtn" value="Liyue" name="regionFilter">
-                     <label for="filterLiyueBtn" class="regionIcon" title="Liyue"><img src="img/region/rev/Liyue.png" alt="Liyue"></label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterInazumaBtn" value="Inazuma" name="regionFilter">
-                     <label for="filterInazumaBtn" class="regionIcon" title="Inazuma"><img src="img/region/rev/Inazuma.png" alt="Inazuma"></label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterOutlanderBtn" value="Outlander" name="regionFilter">
-                     <label for="filterOutlanderBtn" class="regionIcon labelTxt">OUTLANDER</label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterAllBtnRegion" value="All" name="regionFilter" checked>
-                     <label for="filterAllBtnRegion" class="regionIcon labelTxt">ALL</label>
-                  </div>
-
-                  <div class="filterTab">
-                     <input onchange="filterChoices();" type="radio" id="filterHealBtn" value="Heal" name="SkillFilter">
-                     <label for="filterHealBtn" class="skillIcon labelTxt" style="margin-left: 0;">PARTY HEAL</label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterSheildBtn" value="Shield" name="SkillFilter">
-                     <label for="filterSheildBtn" class="skillIcon labelTxt">SHIELD</label>
-
-                     <!-- <input onchange="filterChoices();" type="radio" id="filterDMGUpBtn" value="DMG Up" name="SkillFilter">
-                     <label for="filterDMGUpBtn" class="SkillIcon">DMG UP</label>
-
-                     <input onchange="filterChoices();" type="radio" id="filterDeSkillBtn" value="DeSkill" name="SkillFilter">
-                     <label for="filterDeSkillBtn" class="SkillIcon">DEBUFF</label> -->
-
-                     <input onchange="filterChoices();" type="radio" id="filterAllBtnSkill" value="All" name="SkillFilter" checked>
-                     <label for="filterAllBtnSkill" class="skillIcon labelTxt">ALL</label>
-                  </div>
-               </div>
+               <button onclick="customFilterApply()" id="applyCustomFilterBtn">Apply Custom Filter</button>
 
 
-               </span>
+            </span>
             </span>
          </div>
       </div>
@@ -371,6 +504,9 @@
             </div>
             <div class="charSelect" onclick="tapChar(this)" id="Amber"><img src="img/Amber.png">
                <div class="char_name">Amber</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Arataki_Itto"><img src="img/Arataki_Itto.png">
+               <div class="char_name">Arataki Itto</div>
             </div>
             <div class="charSelect" onclick="tapChar(this)" id="Barbara"><img src="img/Barbara.png">
                <div class="char_name">Barbara</div>
@@ -398,6 +534,9 @@
             </div>
             <div class="charSelect" onclick="tapChar(this)" id="Ganyu"><img src="img/Ganyu.png">
                <div class="char_name">Ganyu</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Gorou"><img src="img/Gorou.png">
+               <div class="char_name">Gorou</div>
             </div>
             <div class="charSelect" onclick="tapChar(this)" id="Hu_Tao"><img src="img/Hu_Tao.png">
                <div class="char_name">Hu Tao</div>
@@ -453,6 +592,9 @@
             <div class="charSelect" onclick="tapChar(this)" id="Sayu"><img src="img/Sayu.png">
                <div class="char_name">Sayu</div>
             </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Shenhe"><img src="img/Shenhe.png">
+               <div class="char_name">Shenhe</div>
+            </div>
             <div class="charSelect" onclick="tapChar(this)" id="Sucrose"><img src="img/Sucrose.png">
                <div class="char_name">Sucrose</div>
             </div>
@@ -483,8 +625,14 @@
             <div class="charSelect" onclick="tapChar(this)" id="Yanfei"><img src="img/Yanfei.png">
                <div class="char_name">Yanfei</div>
             </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Yae_Miko"><img src="img/Yae_Miko.png">
+               <div class="char_name">Yae Miko</div>
+            </div>
             <div class="charSelect" onclick="tapChar(this)" id="Yoimiya"><img src="img/Yoimiya.png">
                <div class="char_name">Yoimiya</div>
+            </div>
+            <div class="charSelect" onclick="tapChar(this)" id="Yun_Jin"><img src="img/Yun_Jin.png">
+               <div class="char_name">Yun Jin</div>
             </div>
             <div class="charSelect" onclick="tapChar(this)" id="Zhongli"><img src="img/Zhongli.png">
                <div class="char_name">Zhongli</div>
@@ -579,7 +727,7 @@
             },
             "Jean": {
                "element": "Anemo",
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "rarity": 5,
                "weapon": "Sword",
                "charURL": "Jean"
@@ -587,34 +735,34 @@
             "Amber": {
                "element": "Pyro",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Bow",
                "charURL": "Amber"
             },
             "Lisa": {
                "element": "Electro",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Catalyst",
                "charURL": "Lisa"
             },
             "Kaeya": {
                "element": "Cryo",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Sword",
                "charURL": "Kaeya"
             },
             "Barbara": {
                "element": "Hydro",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Catalyst",
                "charURL": "Barbara"
             },
             "Diluc": {
                "element": "Pyro",
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "rarity": 5,
                "weapon": "Claymore",
                "charURL": "Diluc"
@@ -622,20 +770,20 @@
             "Razor": {
                "element": "Electro",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Claymore",
                "charURL": "Razor"
             },
             "Venti": {
                "element": "Anemo",
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "rarity": 5,
                "weapon": "Bow",
                "charURL": "Venti"
             },
             "Klee": {
                "element": "Pyro",
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "rarity": 5,
                "weapon": "Catalyst",
                "charURL": "Klee"
@@ -643,63 +791,63 @@
             "Bennett": {
                "element": "Pyro",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Sword",
                "charURL": "Bennett"
             },
             "Noelle": {
                "element": "Geo",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Claymore",
                "charURL": "Noelle"
             },
             "Fischl": {
                "element": "Electro",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Bow",
                "charURL": "Fischl"
             },
             "Sucrose": {
                "element": "Anemo",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Catalyst",
                "charURL": "Sucrose"
             },
             "Mona": {
                "element": "Hydro",
                "rarity": 5,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Catalyst",
                "charURL": "Mona"
             },
             "Diona": {
                "element": "Cryo",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Bow",
                "charURL": "Diona"
             },
             "Albedo": {
                "element": "Geo",
                "rarity": 5,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Sword",
                "charURL": "Albedo"
             },
             "Rosaria": {
                "element": "Cryo",
                "rarity": 4,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Polearm",
                "charURL": "Rosaria"
             },
             "Eula": {
                "element": "Cryo",
                "rarity": 5,
-               "region": "Mondstat",
+               "region": "Mondstadt",
                "weapon": "Claymore",
                "charURL": "Eula"
             },
@@ -863,14 +1011,108 @@
                "region": "Inazuma",
                "weapon": "Polearm",
                "charURL": "Thoma"
+            },
+            "Arataki Itto": {
+               "element": "Geo",
+               "rarity": 5,
+               "region": "Inazuma",
+               "weapon": "Claymore",
+               "charURL": "Arataki_Itto"
+            },
+            "Gorou": {
+               "element": "Geo",
+               "rarity": 4,
+               "region": "Inazuma",
+               "weapon": "Bow",
+               "charURL": "Gorou"
+            },
+            "Shenhe": {
+               "element": "Cryo",
+               "rarity": 5,
+               "region": "Liyue",
+               "weapon": "Polearm",
+               "charURL": "Shenhe"
+            },
+            "Yun Jin": {
+               "element": "Geo",
+               "rarity": 4,
+               "region": "Liyue",
+               "weapon": "Polearm",
+               "charURL": "Yun_Jin"
+            },
+            "Yae Miko": {
+               "element": "Electro",
+               "rarity": 5,
+               "region": "Inazuma",
+               "weapon": "Catalyst",
+               "charURL": "Yae_Miko"
             }
          }
+
+         var customFilterObj = {
+            1: {
+               "name": 'Custom 1',
+               "filter": []
+            },
+            2: {
+               "name": 'Custom 2',
+               "filter": []
+            },
+            3: {
+               "name": 'Custom 3',
+               "filter": []
+            },
+            4: {
+               "name": 'Custom 4',
+               "filter": []
+            },
+            5: {
+               "name": 'Custom 5',
+               "filter": []
+            },
+            6: {
+               "name": 'Custom 6',
+               "filter": []
+            },
+            7: {
+               "name": 'Custom 7',
+               "filter": []
+            },
+            8: {
+               "name": 'Custom 8',
+               "filter": []
+            },
+            9: {
+               "name": 'Custom 9',
+               "filter": []
+            },
+            10: {
+               "name": 'Custom 10',
+               "filter": []
+            }
+         }
+
+         // var view_tabGroups = {
+         //    "selectionMode": "filterLI",
+         //    "characterTraits": "elementLI"
+         // }
 
          function modeSwitch(mode) {
             document.getElementById(selectionMode + 'BTN').classList.remove('currentMode');
             document.getElementById(mode + 'BTN').classList.add('currentMode');
             selectionMode = mode;
          }
+
+         function changeMode(mode) {
+            selectionMode = mode;
+         }
+
+         // function viewTab(tab, tabGroup) {
+         //    document.getElementById(selectionMode + 'Tab').classList.remove('viewTab');
+         //    document.getElementById(mode + 'Tab').classList.add('viewTab');
+         // }
+
+
 
          function changeTeam(type, char) {
             switch (type) {
@@ -882,32 +1124,20 @@
                   index = lockedTeam.indexOf(char);
                   lockedTeam.splice(index, index > -1 ? 1 : 0);
 
+                  if (selectionMode != 'owned') break;
 
-                  if (selectionMode == 'owned') {
-
-                     if (index > -1) {
-                        document.getElementsByClassName('winnerImg')[index].removeAttribute('style');
-                        document.getElementsByClassName('teamSlot')[index].lastElementChild.innerText = '';
-                        document.getElementsByClassName('teamSlot')[index].classList.remove('locked');
-                     }
-
-
-                     index = myTeam.indexOf(char);
-                     myTeam.splice(index, index > -1 ? 1 : 0);
-
+                  if (index > -1) {
+                     document.getElementsByClassName('winnerImg')[index].removeAttribute('style');
+                     document.getElementsByClassName('teamSlot')[index].lastElementChild.innerText = '';
+                     document.getElementsByClassName('teamSlot')[index].classList.remove('locked');
                   }
 
+                  index = myTeam.indexOf(char);
+                  myTeam.splice(index, index > -1 ? 1 : 0);
                   break;
                case 'add':
-
-                  if (!lockedTeam.includes(char)) {
-                     filterTeam.push(char);
-                  }
-
-                  if (selectionMode == 'owned') {
-                     myTeam.push(char);
-                  }
-
+                  if (!lockedTeam.includes(char)) filterTeam.push(char);
+                  if (selectionMode == 'owned') myTeam.push(char);
                   break;
             }
          }
@@ -921,14 +1151,10 @@
                   var temp;
                   if (char.classList.contains('unowned')) {
                      char.classList.remove('inactive');
-                     // char.classList.remove('unowned');
-
                      own_element = 'owned_chars';
                      changeTeam('add', charName);
                   } else {
                      char.classList.add('inactive');
-                     // char.classList.add('unowned');
-
                      own_element = 'unowned_chars'
                      changeTeam('remove', charName);
 
@@ -1002,11 +1228,6 @@
                      }
 
                      [shuffledTeam[index], shuffledTeam[oldIndex]] = [shuffledTeam[oldIndex], shuffledTeam[index]];
-
-
-
-
-
                      var oldSlot = document.getElementsByClassName('teamSlot')[oldIndex];
 
                      slot.appendChild(oldSlot.firstElementChild);
@@ -1020,15 +1241,10 @@
                      }
 
                      slot.classList.add('locked');
-
-
-
-
-
-
                   }
-
-
+                  break;
+               default:
+                  break;
             }
          }
 
@@ -1049,8 +1265,8 @@
             return array;
          }
 
-         function randomizeTeam() {
-            filterTeam = [...document.getElementById('owned_chars').children];
+         function filteredCharTeam() {
+            var filterTeam = [...document.getElementById('owned_chars').children];
 
             filterTeam = filterTeam.filter(a => {
                return !a.classList.contains('hide') && !a.classList.contains('inactive')
@@ -1059,6 +1275,79 @@
             filterTeam.forEach((item, i) => {
                filterTeam[i] = item.lastElementChild.innerText;
             });
+
+            return filterTeam
+         }
+
+         function customFilterRename() {
+            var slot = document.getElementById('customFilterSelection');
+            var rename = prompt('Rename Custom Filter', customFilterObj[slot.value]['name']);
+
+            if (rename === null) return;
+
+            rename = rename.substr(0, 32);
+
+            customFilterObj[slot.value]['name'] = rename;
+
+            slot.children[slot.value - 1].innerText = rename;
+
+            localStorage.genshinCustomFilter = JSON.stringify(customFilterObj);
+
+         }
+
+         function customFilterSave() {
+            var slot = document.getElementById('customFilterSelection').value;
+            var filterTeam = filteredCharTeam();
+            filterTeam.forEach((item, i) => { filterTeam[i] = item.replaceAll(' ', '_')
+
+            });
+
+
+            customFilterObj[slot]['filter'] = filterTeam;
+
+            console.log(filterTeam);
+
+
+
+            localStorage.genshinCustomFilter = JSON.stringify(customFilterObj);
+         }
+
+         function customFilterApply(){
+            var slot = document.getElementById('customFilterSelection').value;
+
+            var customFilterTeam = customFilterObj[slot]['filter'];
+
+            var owned_chars = document.getElementById('owned_chars').children;
+
+            for (var i = 0; i < owned_chars.length; i++) {
+               var char = owned_chars[i]
+               if(customFilterTeam.includes(char.id)){
+                  char.classList.remove('inactive');
+               } else{
+                  char.classList.add('inactive');
+               }
+
+            }
+
+         }
+
+         function changeAllState(state){
+            var owned_chars = document.getElementById('owned_chars').children;
+
+            for (var i = 0; i < owned_chars.length; i++) {
+
+               if (state == 'active') {
+                  owned_chars[i].classList.remove('inactive');
+               } else {
+                  owned_chars[i].classList.add('inactive');
+               }
+
+            }
+         }
+
+         function randomizeTeam() {
+
+            var filterTeam = filteredCharTeam();
 
 
             shuffle(filterTeam);
@@ -1173,6 +1462,17 @@
                   }
                }
             }
+
+            if (localStorage.genshinCustomFilter) {
+               customFilterObj = JSON.parse(localStorage.genshinCustomFilter);
+
+               var option = document.getElementById('customFilterSelection').children
+
+
+               for (var i = 0; i < 10; i++) {
+                  option[i].innerText = customFilterObj[i+1].name;
+               }
+            }
          }
 
 
@@ -1188,7 +1488,7 @@
             filterChoices();
          }
 
-         function filterType(){
+         function filterType() {
             var type = document.querySelector('input[name="filterType"]:checked').value;
             var tabs = [...document.getElementsByClassName('filterTab')];
 
@@ -1235,6 +1535,7 @@
             })
 
          }
+
 
          loadTeam();
       </script>
